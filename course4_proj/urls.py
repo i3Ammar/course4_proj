@@ -14,9 +14,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path , include
+from django.conf import settings
 import gh.views
+import movies.views
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', gh.views.index )
+    path('', gh.views.index ),
+    path('search/', movies.views.search, name = "search"),
+    path('search-wait/<uuid:result_uuid>/',movies.views.search_wait, name  = 'search_wait'),
+    path('search-results/', movies.views.search_results, name = 'search_results'),
 ]
+if settings.DEBUG:
+    import django_browser_reload
+    urlpatterns += [path("__reload__/", include("django_browser_reload.urls"))]

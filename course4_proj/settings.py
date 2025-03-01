@@ -32,18 +32,39 @@ class Dev(Configuration):
         # SECURITY WARNING: don't run with debug turned on in production!
         DEBUG = True
 
-        ALLOWED_HOSTS = ['127.0.0.1', 'localhost','diddy']
+        ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
         # X_FRAME_OPTIONS = "ALLOW-FROM " + os.environ.get("CODIO_HOSTNAME") + "-8000.codio.io"
         CSRF_COOKIE_SAMESITE = None
+        CSRF_COOKIE_SAMESITE = "None"
         # CSRF_TRUSTED_ORIGINS = [os.environ.get("CODIO_HOSTNAME") + "-8000.codio.io"]
         CSRF_COOKIE_SECURE = True
         SESSION_COOKIE_SECURE = True
-        CSRF_COOKIE_SAMESITE = "None"
         SESSION_COOKIE_SAMESITE = "None"
 
+        CELERY_RESULT_BACKEND = 'django-db'
+        CELERY_CACHE_BACKEND = 'django-cache'
 
+        CELERYD_FORCE_EXECV = True  # 🔥 Important line for Windows
+        CELERYD_POOL = "solo"  # This makes Celery work on Windows
+        CELERY_BROKER_URL = "redis://localhost:6379/0"  # Use Redis URL
+        CELERY_ACCEPT_CONTENT = ["json"]
+        CELERY_TASK_SERIALIZER = "json"
+
+        # django setting.
+        CACHES = {
+            'default': {
+                'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+                'LOCATION': 'my_cache_table',
+            }
+        }
         # Application definition
+
+        THIRD_PARTY_APPS = [
+            "django_browser_reload",
+            'django_celery_results',
+
+        ]
         LOCAL_APPS = [
             'movies',
             'gh',
@@ -56,7 +77,7 @@ class Dev(Configuration):
             'django.contrib.messages',
             'django.contrib.staticfiles',
 
-        ]+LOCAL_APPS
+        ]+LOCAL_APPS+THIRD_PARTY_APPS
 
 
         MIDDLEWARE = [
@@ -66,6 +87,7 @@ class Dev(Configuration):
             # 'django.middleware.csrf.CsrfViewMiddleware',
             'django.contrib.auth.middleware.AuthenticationMiddleware',
             'django.contrib.messages.middleware.MessageMiddleware',
+            "django_browser_reload.middleware.BrowserReloadMiddleware",
             # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
         ]
 
@@ -164,3 +186,5 @@ class Dev(Configuration):
                 "level": "DEBUG",
             },
         }
+class Prod(Dev):
+        DEBUG = False

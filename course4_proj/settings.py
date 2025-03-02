@@ -50,7 +50,8 @@ class Dev(Configuration):
         CELERY_BROKER_URL = "redis://localhost:6379/0"  # Use Redis URL
         CELERY_ACCEPT_CONTENT = ["json"]
         CELERY_TASK_SERIALIZER = "json"
-
+        EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+        # ADMINS = [("admin", "ben@example.com")]
         # django setting.
         CACHES = {
             'default': {

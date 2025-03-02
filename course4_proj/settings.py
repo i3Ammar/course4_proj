@@ -63,8 +63,8 @@ class Dev(Configuration):
 
         THIRD_PARTY_APPS = [
             "django_browser_reload",
-            'django_celery_results',
-
+            "django_celery_results",
+            "django_celery_beat" ,
         ]
         LOCAL_APPS = [
             'movies',
